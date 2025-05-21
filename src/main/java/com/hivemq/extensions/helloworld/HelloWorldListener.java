@@ -16,6 +16,7 @@
 package com.hivemq.extensions.helloworld;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.extension.sdk.api.client.parameter.ConnectionAttributeStore;
 import com.hivemq.extension.sdk.api.events.client.ClientLifecycleEventListener;
 import com.hivemq.extension.sdk.api.events.client.parameters.AuthenticationSuccessfulInput;
 import com.hivemq.extension.sdk.api.events.client.parameters.ConnectionStartInput;
@@ -37,18 +38,10 @@ public class HelloWorldListener implements ClientLifecycleEventListener {
 
     @Override
     public void onMqttConnectionStart(final @NotNull ConnectionStartInput connectionStartInput) {
-        final MqttVersion version = connectionStartInput.getConnectPacket().getMqttVersion();
-        switch (version) {
-            case V_5:
-                log.info("MQTT 5 client connected with id: {} ", connectionStartInput.getClientInformation().getClientId());
-                break;
-            case V_3_1_1:
-                log.info("MQTT 3.1.1 client connected with id: {} ", connectionStartInput.getClientInformation().getClientId());
-                break;
-            case V_3_1:
-                log.info("MQTT 3.1 client connected with id: {} ", connectionStartInput.getClientInformation().getClientId());
-                break;
-        }
+        // access the Connection Attribute Store via the connection information from the ConnectionStartInput interface
+        final ConnectionAttributeStore connectionAttributeStore = connectionStartInput.getConnectionInformation().getConnectionAttributeStore();
+        // use the putAsString convenience method
+        connectionAttributeStore.putAsString("my data", "my value");
     }
 
     @Override
