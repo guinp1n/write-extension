@@ -38,7 +38,7 @@ public class HelloWorldListener implements ClientLifecycleEventListener {
 
     @Override
     public void onMqttConnectionStart(final @NotNull ConnectionStartInput connectionStartInput) {
-        log.info("Client id {} started mqtt connection. Write-extension is setting its connection attributes...",
+        log.info("onMqttConnectionStart – clientId {}. Write-extension is setting its connection attributes \"my data\":\"my value\" ...",
                 connectionStartInput.getClientInformation().getClientId());
         // access the Connection Attribute Store via the connection information from the ConnectionStartInput interface
         final ConnectionAttributeStore connectionAttributeStore = connectionStartInput.getConnectionInformation().getConnectionAttributeStore();
@@ -53,6 +53,6 @@ public class HelloWorldListener implements ClientLifecycleEventListener {
 
     @Override
     public void onDisconnect(final @NotNull DisconnectEventInput disconnectEventInput) {
-        log.info("Client disconnected with id: {} ", disconnectEventInput.getClientInformation().getClientId());
+        log.info("onDisconnect  – write-extension  – Client disconnected with id: {} ", disconnectEventInput.getClientInformation().getClientId());
     }
 }
