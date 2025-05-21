@@ -38,6 +38,8 @@ public class HelloWorldListener implements ClientLifecycleEventListener {
 
     @Override
     public void onMqttConnectionStart(final @NotNull ConnectionStartInput connectionStartInput) {
+        log.info("Client id {} started mqtt connection. Write-extension is setting its connection attributes...",
+                connectionStartInput.getClientInformation().getClientId());
         // access the Connection Attribute Store via the connection information from the ConnectionStartInput interface
         final ConnectionAttributeStore connectionAttributeStore = connectionStartInput.getConnectionInformation().getConnectionAttributeStore();
         // use the putAsString convenience method
