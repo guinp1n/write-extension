@@ -21,9 +21,10 @@ import com.hivemq.extension.sdk.api.events.client.ClientLifecycleEventListener;
 import com.hivemq.extension.sdk.api.events.client.parameters.AuthenticationSuccessfulInput;
 import com.hivemq.extension.sdk.api.events.client.parameters.ConnectionStartInput;
 import com.hivemq.extension.sdk.api.events.client.parameters.DisconnectEventInput;
-import com.hivemq.extension.sdk.api.packets.general.MqttVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.ZonedDateTime;
 
 public class HelloWorldListener implements ClientLifecycleEventListener {
 
@@ -31,21 +32,21 @@ public class HelloWorldListener implements ClientLifecycleEventListener {
 
     @Override
     public void onMqttConnectionStart(final @NotNull ConnectionStartInput connectionStartInput) {
-        log.info("onMqttConnectionStart – clientId {}. Write-extension is setting its connection attributes \"my data\":\"my value\" ...",
+        log.info("write-extension.ClientLifecycleEventListener.onMqttConnectionStart    – clientId: {}.",
                 connectionStartInput.getClientInformation().getClientId());
-        // access the Connection Attribute Store via the connection information from the ConnectionStartInput interface
         final ConnectionAttributeStore connectionAttributeStore = connectionStartInput.getConnectionInformation().getConnectionAttributeStore();
-        // use the putAsString convenience method
-        connectionAttributeStore.putAsString("my data", "my value");
+        connectionAttributeStore.putAsString("write-extension.ClientLifecycleEventListener.onMqttConnectionStart", ZonedDateTime.now().toString());
     }
 
     @Override
     public void onAuthenticationSuccessful(final @NotNull AuthenticationSuccessfulInput authenticationSuccessfulInput) {
-
+        log.info("write-extension.ClientLifecycleEventListener.onAuthenticationSuccessful    – clientId: {}.",
+                authenticationSuccessfulInput.getClientInformation().getClientId());
     }
 
     @Override
     public void onDisconnect(final @NotNull DisconnectEventInput disconnectEventInput) {
-        log.info("onDisconnect  – write-extension  – Client disconnected with id: {} ", disconnectEventInput.getClientInformation().getClientId());
+        log.info("write-extension.ClientLifecycleEventListener.onDisconnect    – clientId: {}.",
+                disconnectEventInput.getClientInformation().getClientId());
     }
 }

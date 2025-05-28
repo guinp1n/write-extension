@@ -8,22 +8,21 @@ import com.hivemq.extension.sdk.api.client.parameter.ConnectionAttributeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
-import java.util.Map;
-import java.util.Optional;
+import java.time.ZonedDateTime;
 
 public class HelloWorldAuthenticator implements SimpleAuthenticator {
     private static final @NotNull Logger log = LoggerFactory.getLogger(HelloWorldAuthenticator.class);
+
     @Override
     public void onConnect(final @NotNull SimpleAuthInput simpleAuthInput, final @NotNull SimpleAuthOutput simpleAuthOutput) {
         final String clientId = simpleAuthInput.getClientInformation().getClientId();
-        log.info("onConnect – write-extension – clientId {}. Write-extension is setting its connection attributes certhash:000000 ...",
-                clientId);
+
+        log.info("write-extension.SimpleAuthenticator.onConnect – clientId {}.", clientId);
+
         final ConnectionAttributeStore connectionAttributeStore = simpleAuthInput
                 .getConnectionInformation()
                 .getConnectionAttributeStore();
-
-        connectionAttributeStore.putAsString("certhash", "000000");
+        connectionAttributeStore.putAsString("write-extension.SimpleAuthenticator.onConnect", ZonedDateTime.now().toString());
 
         simpleAuthOutput.nextExtensionOrDefault();
     }

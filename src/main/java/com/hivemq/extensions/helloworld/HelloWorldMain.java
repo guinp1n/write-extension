@@ -21,7 +21,6 @@ import com.hivemq.extension.sdk.api.auth.SimpleAuthenticator;
 import com.hivemq.extension.sdk.api.events.EventRegistry;
 import com.hivemq.extension.sdk.api.parameter.*;
 import com.hivemq.extension.sdk.api.services.Services;
-import com.hivemq.extension.sdk.api.services.intializer.InitializerRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,11 +35,12 @@ public class HelloWorldMain implements ExtensionMain {
             final @NotNull ExtensionStartOutput extensionStartOutput) {
 
         try {
-            Services.securityRegistry().setAuthenticatorProvider(authenticatorProviderInput -> helloWriteAuthenticator);
+            addConnectInboundInterceptor();
             addClientLifecycleEventListener();
+            Services.securityRegistry().setAuthenticatorProvider(authenticatorProviderInput -> helloWriteAuthenticator);
 
             final ExtensionInformation extensionInformation = extensionStartInput.getExtensionInformation();
-            log.info("Started " + extensionInformation.getName() + ":" + extensionInformation.getVersion());
+            log.info("Hello, I have started! {}:{}", extensionInformation.getName(), extensionInformation.getVersion());
 
         } catch (final Exception e) {
             log.error("Exception thrown at extension start: ", e);
@@ -64,5 +64,9 @@ public class HelloWorldMain implements ExtensionMain {
         eventRegistry.setClientLifecycleEventListener(input -> helloWorldListener);
     }
 
+    private void addConnectInboundInterceptor() {
+        final HelloWorldInterceptor helloWorldInterceptor = new HelloWorldInterceptor();
 
+        Services.interceptorRegistry().setConnectInboundInterceptorProvider(input -> helloWorldInterceptor);
+    }
 }
